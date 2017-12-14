@@ -229,10 +229,22 @@ public class ObjGeometry {
   private static FaceVertex parseFaceVertex(String s) {
     String[] parts = s.split("/");
     if (parts.length == 0) throw new RuntimeException("FaceVertex must have a face index.");
-    // We decrement each index by one because in OBJ files indices start from 1.
-    return new FaceVertex(Integer.parseInt(parts[0]) - 1,
-        parts.length >= 2 ? Integer.parseInt(parts[1]) - 1 : MISSING,
-        parts.length >= 3 ? Integer.parseInt(parts[2]) - 1 : MISSING);
+    int vertexIndex = Integer.parseInt(parts[0]);
+    int texCoordIndex = parts.length >= 2 ? tryParseInt(parts[1], MISSING) : MISSING;
+    int normalIndex = parts.length >= 3 ? tryParseInt(parts[2], MISSING) : MISSING;
+    // Subtract 1 from all indices because OBJ indices start at 1 and ours start at 0.
+    return new FaceVertex(
+        vertexIndex == MISSING ? MISSING : vertexIndex - 1,
+        texCoordIndex == MISSING ? MISSING : texCoordIndex - 1,
+        normalIndex == MISSING ? MISSING : normalIndex - 1);
+  }
+
+  private static int tryParseInt(String s, int defaultValue) {
+    try {
+      return Integer.parseInt(s);
+    } catch (NumberFormatException ex) {
+      return defaultValue;
+    }
   }
 
   private void encapsulateInBounds(Vec3 vertex) {

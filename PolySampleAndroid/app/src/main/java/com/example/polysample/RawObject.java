@@ -100,7 +100,7 @@ public class RawObject {
       short startVertexIndex = currentVertexIndex;
       for (int j = 0; j < numVerticesInFace; j++) {
         ObjGeometry.FaceVertex faceVertex = face.faceVertices[j];
-        ObjGeometry.Vec3 pos = geometry.getVertex(faceVertex.vertexIndex);
+        ObjGeometry.Vec3 pos = new ObjGeometry.Vec3(geometry.getVertex(faceVertex.vertexIndex));
         ObjGeometry.Vec3 normal;
         if (faceVertex.normalIndex != ObjGeometry.MISSING) {
           normal = geometry.getNormal(faceVertex.normalIndex);
