@@ -13,16 +13,20 @@
  * limitations under the License.
  */
 
-uniform mat4 u_Model;
+uniform mat4 u_ModelView;
 uniform mat4 u_ModelViewProjection;
-uniform mat2 u_PlaneUvMatrix;
 
-attribute vec3 a_XZPositionAlpha; // (x, z, alpha)
+attribute vec4 a_Position;
+attribute vec3 a_Normal;
+attribute vec2 a_TexCoord;
 
-varying vec3 v_TexCoordAlpha;
+varying vec3 v_ViewPosition;
+varying vec3 v_ViewNormal;
+varying vec2 v_TexCoord;
 
 void main() {
-   vec4 position = vec4(a_XZPositionAlpha.x, 0.0, a_XZPositionAlpha.y, 1.0);
-   v_TexCoordAlpha = vec3(u_PlaneUvMatrix * (u_Model * position).xz, a_XZPositionAlpha.z);
-   gl_Position = u_ModelViewProjection * position;
+    v_ViewPosition = (u_ModelView * a_Position).xyz;
+    v_ViewNormal = normalize((u_ModelView * vec4(a_Normal, 0.0)).xyz);
+    v_TexCoord = a_TexCoord;
+    gl_Position = u_ModelViewProjection * a_Position;
 }
